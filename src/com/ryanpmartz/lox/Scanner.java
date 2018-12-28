@@ -85,19 +85,19 @@ public class Scanner {
 				addToken(STAR);
 				break;
 			case '!':
-				addToken(match('=') ? BANG_EQUAL : BANG);
+				addToken(nextCharMatches('=') ? BANG_EQUAL : BANG);
 				break;
 			case '=':
-				addToken(match('=') ? EQUAL_EQUAL : EQUAL);
+				addToken(nextCharMatches('=') ? EQUAL_EQUAL : EQUAL);
 				break;
 			case '<':
-				addToken(match('=') ? LESS_EQUAL : LESS);
+				addToken(nextCharMatches('=') ? LESS_EQUAL : LESS);
 				break;
 			case '>':
-				addToken(match('=') ? GREATER_EQUAL : GREATER);
+				addToken(nextCharMatches('=') ? GREATER_EQUAL : GREATER);
 				break;
 			case '/':
-				if (match('/')) {
+				if (nextCharMatches('/')) {
 					// A comment goes until the end of the line.
 					while (peek() != '\n' && !isAtEnd()) {
 						advance();
@@ -135,7 +135,8 @@ public class Scanner {
 	}
 
 	// method to figure out if a token is a compound token, e.g. = or ==
-	private boolean match(char expected) {
+	// in this book this is called nextCharMatches but I'm renaming
+	private boolean nextCharMatches(char expected) {
 		if (isAtEnd()) {
 			return false;
 		}
