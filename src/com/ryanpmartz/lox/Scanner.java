@@ -20,6 +20,7 @@ import static com.ryanpmartz.lox.TokenType.RIGHT_PAREN;
 import static com.ryanpmartz.lox.TokenType.SEMICOLON;
 import static com.ryanpmartz.lox.TokenType.SLASH;
 import static com.ryanpmartz.lox.TokenType.STAR;
+import static com.ryanpmartz.lox.TokenType.STRING;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,6 +103,8 @@ public class Scanner {
 					while (peek() != '\n' && !isAtEnd()) {
 						advance();
 					}
+
+					// note that we don't add a Token for a comment
 				} else {
 					addToken(SLASH);
 				}
@@ -113,6 +116,10 @@ public class Scanner {
 
 			case '\n':
 				line++;
+				break;
+
+			case '"':
+				string();
 				break;
 			default:
 				Lox.error(line, "Unexpected character.");
@@ -155,5 +162,26 @@ public class Scanner {
 		}
 
 		return source.charAt(current);
+	}
+
+	private void string() {
+		while (peek() != '"' && !isAtEnd()) {
+			if (peek() == '\n') { // support multiline strings
+				line++;
+			}
+			advance();
+		}
+
+		if (isAtEnd()) {
+			Lox.error(line, "Unterminatd string.");
+			return;
+		}
+
+		// advance to closing '"'
+		advance();
+
+		// trim surrounding quotes
+		String value = source.substring(start + 1, current - 1);
+		addToken(STRING, value);
 	}
 }
