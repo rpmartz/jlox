@@ -1,5 +1,6 @@
 package com.ryanpmartz.lox;
 
+import static com.ryanpmartz.lox.Logger.log;
 import static com.ryanpmartz.lox.TokenType.BANG;
 import static com.ryanpmartz.lox.TokenType.BANG_EQUAL;
 import static com.ryanpmartz.lox.TokenType.COMMA;
@@ -50,10 +51,12 @@ public class Scanner {
 	}
 
 	private boolean isAtEnd() {
+		log("Scanner.isAtEnd() invoked", this);
 		return current >= source.length();
 	}
 
 	private void scanToken() {
+		log("Scanner.scanToken() invoked", this);
 		char c = advance();
 		switch (c) {
 			case '(':
@@ -133,6 +136,7 @@ public class Scanner {
 	}
 
 	private char advance() {
+		log("Scanner.advance() invoked", this);
 		current++;
 		return source.charAt(current - 1);
 	}
@@ -142,6 +146,7 @@ public class Scanner {
 	}
 
 	private void addToken(TokenType type, Object literal) {
+		log("Scanner.addToken() invoked. Adding [" + literal + "] as type [" + type + "]", this);
 		String text = source.substring(start, current);
 		tokens.add(new Token(type, text, literal, line));
 	}
@@ -149,6 +154,7 @@ public class Scanner {
 	// method to figure out if a token is a compound token, e.g. = or ==
 	// in this book this is called nextCharMatches but I'm renaming
 	private boolean nextCharMatches(char expected) {
+		log("Scanner.nextCharMatches() checking for [" + expected + "]", this);
 		if (isAtEnd()) {
 			return false;
 		}
@@ -162,6 +168,7 @@ public class Scanner {
 	}
 
 	private char peek() {
+		log("Scanner.peek() invoked", this);
 		if (isAtEnd()) {
 			return '\0';
 		}
@@ -170,6 +177,7 @@ public class Scanner {
 	}
 
 	private void string() {
+		log("Scanner.string() invoked", this);
 		while (peek() != '"' && !isAtEnd()) {
 			if (peek() == '\n') { // support multiline strings
 				line++;
@@ -197,6 +205,7 @@ public class Scanner {
 	}
 
 	private void number() {
+		log("Scanner.number() invoked", this);
 		while (isDigit(peek())) {
 			advance();
 		}
@@ -216,6 +225,7 @@ public class Scanner {
 	}
 
 	private char peekNext() {
+		log("Scanner.peekNext() invoked", this);
 		if (current + 1 >= source.length()) {
 			return '\0';
 		}
