@@ -178,7 +178,7 @@ public class Scanner {
 		}
 
 		if (isAtEnd()) {
-			Lox.error(line, "Unterminatd string.");
+			Lox.error(line, "Unterminated string.");
 			return;
 		}
 
@@ -221,5 +221,16 @@ public class Scanner {
 		}
 
 		return source.charAt(current + 1);
+	}
+
+	@Override
+	public String toString() {
+		return "Scanner{" +
+				"source='" + source + '\'' +
+				", tokens=" + tokens +
+				", start=" + start +
+				", current=" + current +
+				", line=" + line +
+				'}';
 	}
 }
