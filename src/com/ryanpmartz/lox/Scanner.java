@@ -14,6 +14,7 @@ import static com.ryanpmartz.lox.TokenType.LEFT_PAREN;
 import static com.ryanpmartz.lox.TokenType.LESS;
 import static com.ryanpmartz.lox.TokenType.LESS_EQUAL;
 import static com.ryanpmartz.lox.TokenType.MINUS;
+import static com.ryanpmartz.lox.TokenType.NUMBER;
 import static com.ryanpmartz.lox.TokenType.PLUS;
 import static com.ryanpmartz.lox.TokenType.RIGHT_BRACE;
 import static com.ryanpmartz.lox.TokenType.RIGHT_PAREN;
@@ -122,7 +123,11 @@ public class Scanner {
 				string();
 				break;
 			default:
-				Lox.error(line, "Unexpected character.");
+				if (isDigit(c)) {
+					number();
+				} else {
+					Lox.error(line, "Unexpected character.");
+				}
 				break;
 		}
 	}
@@ -183,5 +188,38 @@ public class Scanner {
 		// trim surrounding quotes
 		String value = source.substring(start + 1, current - 1);
 		addToken(STRING, value);
+	}
+
+	private boolean isDigit(char c) {
+		// allow 1234 and 12.34 but not .1234 or 1234.
+		// .1234 is easy but 1234. makes methods on numbers, e.g. 12.sqrt() hard
+		return c >= '0' && c <= '9';
+	}
+
+	private void number() {
+		while (isDigit(peek())) {
+			advance();
+		}
+
+		// Look for a fractional part.
+		if (peek() == '.' && isDigit(peekNext())) {
+			// Consume the "."
+			advance();
+
+			while (isDigit(peek())) {
+				advance();
+			}
+		}
+
+		addToken(NUMBER,
+				Double.parseDouble(source.substring(start, current)));
+	}
+
+	private char peekNext() {
+		if (current + 1 >= source.length()) {
+			return '\0';
+		}
+
+		return source.charAt(current + 1);
 	}
 }
