@@ -10,6 +10,7 @@ import static com.ryanpmartz.lox.TokenType.EQUAL;
 import static com.ryanpmartz.lox.TokenType.EQUAL_EQUAL;
 import static com.ryanpmartz.lox.TokenType.GREATER;
 import static com.ryanpmartz.lox.TokenType.GREATER_EQUAL;
+import static com.ryanpmartz.lox.TokenType.IDENTIFIER;
 import static com.ryanpmartz.lox.TokenType.LEFT_BRACE;
 import static com.ryanpmartz.lox.TokenType.LEFT_PAREN;
 import static com.ryanpmartz.lox.TokenType.LESS;
@@ -128,6 +129,8 @@ public class Scanner {
 			default:
 				if (isDigit(c)) {
 					number();
+				} else if (isAlpha(c)) {
+					identifier();
 				} else {
 					Lox.error(line, "Unexpected character.");
 				}
@@ -165,6 +168,24 @@ public class Scanner {
 
 		current++;
 		return true;
+	}
+
+	private void identifier() {
+		while (isAlphaNumeric(peek())) {
+			advance();
+		}
+
+		addToken(IDENTIFIER);
+	}
+
+	private boolean isAlpha(char c) {
+		return (c >= 'a' && c <= 'z') ||
+				(c >= 'A' && c <= 'Z') ||
+				c == '_';
+	}
+
+	private boolean isAlphaNumeric(char c) {
+		return isAlpha(c) || isDigit(c);
 	}
 
 	private char peek() {
