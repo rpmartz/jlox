@@ -215,7 +215,16 @@ public class Scanner {
 			advance();
 		}
 
-		addToken(IDENTIFIER);
+		// See if the identifier is a reserved word.
+		String text = source.substring(start, current);
+
+		TokenType type = keywords.get(text);
+		if (type == null) {
+			type = IDENTIFIER;
+		}
+
+		addToken(type);
+
 	}
 
 	private boolean isAlpha(char c) {
