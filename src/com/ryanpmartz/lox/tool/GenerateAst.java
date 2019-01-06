@@ -33,6 +33,8 @@ public class GenerateAst {
 		pw.println();
 		pw.println("abstract class " + baseName + " {");
 
+		defineVisitor(pw, baseName, types);
+
 		// The AST classes.
 		for (String type : types) {
 			String className = type.split(":")[0].trim();
@@ -66,6 +68,19 @@ public class GenerateAst {
 		writer.println();
 		for (String field : fields) {
 			writer.println("    final " + field + ";");
+		}
+
+		writer.println("  }");
+	}
+
+	private static void defineVisitor(
+			PrintWriter writer, String baseName, List<String> types) {
+		writer.println("  interface Visitor<T> {");
+
+		for (String type : types) {
+			String typeName = type.split(":")[0].trim();
+			writer.println("    T visit" + typeName + baseName + "(" +
+					typeName + " " + baseName.toLowerCase() + ");");
 		}
 
 		writer.println("  }");
