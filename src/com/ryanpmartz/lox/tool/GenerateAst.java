@@ -42,6 +42,9 @@ public class GenerateAst {
 			defineType(pw, baseName, className, fields);
 		}
 
+		pw.println();
+		pw.println(" abstract <T> T accept (Visitor<T> visitor);");
+
 		pw.println("}");
 		pw.close();
 	}
@@ -62,6 +65,12 @@ public class GenerateAst {
 			writer.println("      this." + name + " = " + name + ";");
 		}
 
+		writer.println("    }");
+
+		writer.println();
+		writer.println("    <T> T accept(Visitor<T> visitor) {");
+		writer.println("      return visitor.visit" +
+				className + baseName + "(this);");
 		writer.println("    }");
 
 		// Fields.
