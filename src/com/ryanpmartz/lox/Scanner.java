@@ -76,7 +76,7 @@ public class Scanner {
 	private int current = 0;
 	private int line = 1;
 
-	public Scanner(String source) {
+	Scanner(String source) {
 		this.source = source;
 	}
 
