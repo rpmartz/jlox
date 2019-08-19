@@ -6,9 +6,11 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Scanner;
+import java.util.List;
 
 public class Lox {
+
+	private static boolean hadError = false;
 
 	public static void main(String[] args) throws IOException {
 		// program can be run with an interpreter (no args) or on a file
@@ -25,6 +27,10 @@ public class Lox {
 	private static void runFile(String path) throws IOException {
 		byte[] bytes = Files.readAllBytes(Paths.get(path));
 		run(new String(bytes, Charset.defaultCharset()));
+
+		if (hadError) {
+			System.exit(65);
+		}
 	}
 
 	private static void runPrompt() throws IOException {
@@ -34,6 +40,7 @@ public class Lox {
 		for (; ; ) {
 			System.out.println("> ");
 			run(reader.readLine());
+			hadError = false; // reset this each iteration so program doesn't die on bad input
 		}
 	}
 
@@ -44,5 +51,15 @@ public class Lox {
 		for (Token token : tokens) {
 			System.out.println(token);
 		}
+	}
+
+	private static void error(int line, String message) {
+		report(line, "", message);
+	}
+
+	private static void report(int line, String where, String message) {
+		System.err.println(
+				"[line " + line + "] Error" + where + ": " + message);
+		hadError = true;
 	}
 }
