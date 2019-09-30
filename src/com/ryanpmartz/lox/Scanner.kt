@@ -1,98 +1,64 @@
-package com.ryanpmartz.lox;
+package com.ryanpmartz.lox
 
-import static com.ryanpmartz.lox.TokenType.COMMA;
-import static com.ryanpmartz.lox.TokenType.DOT;
-import static com.ryanpmartz.lox.TokenType.EOF;
-import static com.ryanpmartz.lox.TokenType.LEFT_BRACE;
-import static com.ryanpmartz.lox.TokenType.LEFT_PAREN;
-import static com.ryanpmartz.lox.TokenType.MINUS;
-import static com.ryanpmartz.lox.TokenType.PLUS;
-import static com.ryanpmartz.lox.TokenType.RIGHT_BRACE;
-import static com.ryanpmartz.lox.TokenType.RIGHT_PAREN;
-import static com.ryanpmartz.lox.TokenType.SEMICOLON;
-import static com.ryanpmartz.lox.TokenType.STAR;
+import com.ryanpmartz.lox.TokenType.COMMA
+import com.ryanpmartz.lox.TokenType.DOT
+import com.ryanpmartz.lox.TokenType.EOF
+import com.ryanpmartz.lox.TokenType.LEFT_BRACE
+import com.ryanpmartz.lox.TokenType.LEFT_PAREN
+import com.ryanpmartz.lox.TokenType.MINUS
+import com.ryanpmartz.lox.TokenType.PLUS
+import com.ryanpmartz.lox.TokenType.RIGHT_BRACE
+import com.ryanpmartz.lox.TokenType.RIGHT_PAREN
+import com.ryanpmartz.lox.TokenType.SEMICOLON
+import com.ryanpmartz.lox.TokenType.STAR
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.ArrayList
 
-public class Scanner {
+class Scanner(private val source: String) {
+    private val tokens = ArrayList<Token>()
 
-	private final String source;
-	private final List<Token> tokens = new ArrayList<>();
+    private var start = 0
+    private var current = 0
+    private val line = 1
 
-	private int start = 0;
-	private int current = 0;
-	private int line = 1;
+    private val isAtEnd: Boolean
+        get() = current >= source.length
 
-	public Scanner(String source) {
-		this.source = source;
-	}
+    fun scanTokens(): List<Token> {
+        while (!isAtEnd) {
+            start = current
+            scanToken()
+        }
 
-	protected List<Token> scanTokens() {
-		while (!isAtEnd()) {
-			start = current;
-			scanToken();
-		}
+        tokens.add(Token(EOF, "", null, line))
+        return tokens
+    }
 
-		tokens.add(new Token(EOF, "", null, line));
-		return tokens;
-	}
+    // each turn of the loop, scan a single token
+    private fun scanToken() {
+        val c = advance()
+        when (c) {
+            '(' -> addToken(LEFT_PAREN)
+            ')' -> addToken(RIGHT_PAREN)
+            '{' -> addToken(LEFT_BRACE)
+            '}' -> addToken(RIGHT_BRACE)
+            ',' -> addToken(COMMA)
+            '.' -> addToken(DOT)
+            '-' -> addToken(MINUS)
+            '+' -> addToken(PLUS)
+            ';' -> addToken(SEMICOLON)
+            '*' -> addToken(STAR)
+            else -> Lox.error(line, "Unexpected character")
+        }
+    }
 
-	private boolean isAtEnd() {
-		return current >= source.length();
-	}
+    private fun advance(): Char {
+        current++
+        return source[current - 1]
+    }
 
-	// each turn of the loop, scan a single token
-	private void scanToken() {
-		char c = advance();
-		switch (c) {
-			case '(':
-				addToken(LEFT_PAREN);
-				break;
-			case ')':
-				addToken(RIGHT_PAREN);
-				break;
-			case '{':
-				addToken(LEFT_BRACE);
-				break;
-			case '}':
-				addToken(RIGHT_BRACE);
-				break;
-			case ',':
-				addToken(COMMA);
-				break;
-			case '.':
-				addToken(DOT);
-				break;
-			case '-':
-				addToken(MINUS);
-				break;
-			case '+':
-				addToken(PLUS);
-				break;
-			case ';':
-				addToken(SEMICOLON);
-				break;
-			case '*':
-				addToken(STAR);
-				break;
-			default:
-				Lox.error(line, "Unexpected character");
-				break;
-		}
-	}
-
-	private char advance() {
-		current++;
-		return source.charAt(current - 1);
-	}
-
-	private void addToken(TokenType type) {
-		addToken(type, null);
-	}
-
-	private void addToken(TokenType type, Object literal) {
-		String text = source.substring(start, current);
-		tokens.add(new Token(type, text, literal, line));
-	}
+    private fun addToken(type: TokenType, literal: Any? = null) {
+        val text = source.substring(start, current)
+        tokens.add(Token(type, text, literal, line))
+    }
 }
