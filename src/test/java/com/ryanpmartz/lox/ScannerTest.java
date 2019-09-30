@@ -32,12 +32,25 @@ class ScannerTest {
 	}
 
 	@Test
-	public void testRegularCharacters() {
-		String source = "Bandit";
+	public void testSingleBangOperator() {
+		String source = "!a";
 		Scanner scanner = new Scanner(source);
-		List<Token> tokens = scanner.scanTokens();
 
-		assertEquals(1, tokens.size());
+		List<Token> tokens = scanner.scanTokens();
+		Token token = tokens.get(0);
+
+		assertEquals(token.type, TokenType.BANG);
+	}
+
+	@Test
+	public void testNotEqual() {
+		String source = "!=";
+		Scanner scanner = new Scanner(source);
+
+		List<Token> tokens = scanner.scanTokens();
+		Token token = tokens.get(0);
+
+		assertEquals(token.type, TokenType.BANG_EQUAL);
 	}
 
 }

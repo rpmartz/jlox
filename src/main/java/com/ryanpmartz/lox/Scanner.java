@@ -1,10 +1,18 @@
 package com.ryanpmartz.lox;
 
+import static com.ryanpmartz.lox.TokenType.BANG;
+import static com.ryanpmartz.lox.TokenType.BANG_EQUAL;
 import static com.ryanpmartz.lox.TokenType.COMMA;
 import static com.ryanpmartz.lox.TokenType.DOT;
 import static com.ryanpmartz.lox.TokenType.EOF;
+import static com.ryanpmartz.lox.TokenType.EQUAL;
+import static com.ryanpmartz.lox.TokenType.EQUAL_EQUAL;
+import static com.ryanpmartz.lox.TokenType.GREATER;
+import static com.ryanpmartz.lox.TokenType.GREATER_EQUAL;
 import static com.ryanpmartz.lox.TokenType.LEFT_BRACE;
 import static com.ryanpmartz.lox.TokenType.LEFT_PAREN;
+import static com.ryanpmartz.lox.TokenType.LESS;
+import static com.ryanpmartz.lox.TokenType.LESS_EQUAL;
 import static com.ryanpmartz.lox.TokenType.MINUS;
 import static com.ryanpmartz.lox.TokenType.PLUS;
 import static com.ryanpmartz.lox.TokenType.RIGHT_BRACE;
@@ -76,6 +84,18 @@ public class Scanner {
 			case '*':
 				addToken(STAR);
 				break;
+			case '!':
+				addToken(match('=') ? BANG_EQUAL : BANG);
+				break;
+			case '=':
+				addToken(match('=') ? EQUAL_EQUAL : EQUAL);
+				break;
+			case '<':
+				addToken(match('=') ? LESS_EQUAL : LESS);
+				break;
+			case '>':
+				addToken(match('=') ? GREATER_EQUAL : GREATER);
+				break;
 			default:
 				// keep scanning when you see an unexpected character in order to both
 				// avoid an infinite loop as well as ensure you show the user all errors
@@ -97,5 +117,20 @@ public class Scanner {
 	private void addToken(TokenType type, Object literal) {
 		String text = source.substring(start, current);
 		tokens.add(new Token(type, text, literal, line));
+	}
+
+	// conditionally advances if next character == expected
+	private boolean match(char expected) {
+		if (isAtEnd()) {
+			return false;
+		}
+
+		if (source.charAt(current) != expected) {
+			return false;
+		}
+
+		// conditionally advances
+		current++;
+		return true;
 	}
 }
