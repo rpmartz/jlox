@@ -31,4 +31,13 @@ class ScannerTest {
 		assertEquals(3, tokens.size());
 	}
 
+	@Test
+	public void testRegularCharacters() {
+		String source = "Bandit";
+		Scanner scanner = new Scanner(source);
+		List<Token> tokens = scanner.scanTokens();
+
+		assertEquals(1, tokens.size());
+	}
+
 }
