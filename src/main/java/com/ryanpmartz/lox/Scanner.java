@@ -18,6 +18,7 @@ import static com.ryanpmartz.lox.TokenType.PLUS;
 import static com.ryanpmartz.lox.TokenType.RIGHT_BRACE;
 import static com.ryanpmartz.lox.TokenType.RIGHT_PAREN;
 import static com.ryanpmartz.lox.TokenType.SEMICOLON;
+import static com.ryanpmartz.lox.TokenType.SLASH;
 import static com.ryanpmartz.lox.TokenType.STAR;
 
 import java.util.ArrayList;
@@ -96,6 +97,15 @@ public class Scanner {
 			case '>':
 				addToken(match('=') ? GREATER_EQUAL : GREATER);
 				break;
+			case '/':
+				if (match('/')) {
+					// comments go to end of line so need to consume the entire line
+					while (peek() != '\n' && !isAtEnd()) {
+						advance();
+					}
+				} else {
+					addToken(SLASH);
+				}
 			default:
 				// keep scanning when you see an unexpected character in order to both
 				// avoid an infinite loop as well as ensure you show the user all errors
@@ -132,5 +142,14 @@ public class Scanner {
 		// conditionally advances
 		current++;
 		return true;
+	}
+
+	// looks ahead _without_ consuming the character
+	private char peek() {
+		if (isAtEnd()) {
+			return '\0';
+		}
+
+		return source.charAt(current);
 	}
 }
