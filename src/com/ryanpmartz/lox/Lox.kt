@@ -1,63 +1,66 @@
-package com.ryanpmartz.lox;
+package com.ryanpmartz.lox
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
+import java.nio.charset.Charset
+import java.nio.file.Files
+import java.nio.file.Paths
 
-public class Lox {
+object Lox {
 
-	static boolean hadError = false;
+    internal var hadError = false
 
-	public static void main(String[] args) throws IOException {
-		if (args.length > 1) {
-			System.out.println("Usage: jlox [script]");
-			System.out.println(64); // unix sysexits.h code for incorrect usage
-		} else if (args.length == 1) {
-			runFile(args[0]);
-		} else {
-			runPrompt();
-		}
-	}
+    @Throws(IOException::class)
+    @JvmStatic
+    fun main(args: Array<String>) {
+        if (args.size > 1) {
+            println("Usage: jlox [script]")
+            println(64) // unix sysexits.h code for incorrect usage
+        } else if (args.size == 1) {
+            runFile(args[0])
+        } else {
+            runPrompt()
+        }
+    }
 
-	private static void runFile(String path) throws IOException {
-		byte[] bytes = Files.readAllBytes(Paths.get(path));
-		run(new String(bytes, Charset.defaultCharset()));
+    @Throws(IOException::class)
+    private fun runFile(path: String) {
+        val bytes = Files.readAllBytes(Paths.get(path))
+        run(String(bytes, Charset.defaultCharset()))
 
-		if (hadError) {
-			System.exit(65);
-		}
-	}
+        if (hadError) {
+            System.exit(65)
+        }
+    }
 
-	private static void runPrompt() throws IOException {
-		InputStreamReader input = new InputStreamReader(System.in);
-		BufferedReader reader = new BufferedReader(input);
+    @Throws(IOException::class)
+    private fun runPrompt() {
+        val input = InputStreamReader(System.`in`)
+        val reader = BufferedReader(input)
 
-		for (; ; ) {
-			System.out.println("> ");
-			run(reader.readLine());
-			hadError = false;
-		}
-	}
+        while (true) {
+            println("> ")
+            run(reader.readLine())
+            hadError = false
+        }
+    }
 
-	private static void run(String source) {
-		Scanner scanner = new Scanner(source);
-		List<Token> tokens = scanner.scanTokens();
+    private fun run(source: String) {
+        val scanner = Scanner(source)
+        val tokens = scanner.scanTokens()
 
-		for (Token token : tokens) {
-			System.out.println(token);
-		}
-	}
+        for (token in tokens) {
+            println(token)
+        }
+    }
 
-	static void error(int line, String message) {
-		report(line, "", message);
-	}
+    internal fun error(line: Int, message: String) {
+        report(line, "", message)
+    }
 
-	static void report(int line, String where, String message) {
-		System.err.println("[line " + line + "] Error" + where + ": " + message);
-		hadError = true;
-	}
+    internal fun report(line: Int, where: String, message: String) {
+        System.err.println("[line $line] Error$where: $message")
+        hadError = true
+    }
 }
