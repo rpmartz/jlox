@@ -20,6 +20,7 @@ import static com.ryanpmartz.lox.TokenType.RIGHT_PAREN;
 import static com.ryanpmartz.lox.TokenType.SEMICOLON;
 import static com.ryanpmartz.lox.TokenType.SLASH;
 import static com.ryanpmartz.lox.TokenType.STAR;
+import static com.ryanpmartz.lox.TokenType.STRING;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,6 +116,9 @@ public class Scanner {
 			case '\n':
 				line++;
 				break;
+			case '"':
+				string();
+				break;
 			default:
 				// keep scanning when you see an unexpected character in order to both
 				// avoid an infinite loop as well as ensure you show the user all errors
@@ -160,5 +164,28 @@ public class Scanner {
 		}
 
 		return source.charAt(current);
+	}
+
+	private void string() {
+		while (peek() != '"' && !isAtEnd()) {
+			if (peek() == '\n') {
+				// lox handles multiline strings so we need to increment line number
+				line++;
+			}
+			advance();
+		}
+
+		// unterminated string
+		if (isAtEnd()) {
+			Lox.error(line, "Unterminated string.");
+			return;
+		}
+
+		// move cursor to closing "
+		advance();
+
+		// trim leading and trailing quotes
+		String value = source.substring(start + 1, current - 1);
+		addToken(STRING, value);
 	}
 }
