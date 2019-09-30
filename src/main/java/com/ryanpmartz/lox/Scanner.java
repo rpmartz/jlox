@@ -100,12 +100,13 @@ public class Scanner {
 			case '/':
 				if (match('/')) {
 					// comments go to end of line so need to consume the entire line
-					while (peek() != '\n' && !isAtEnd()) {
+					while (peek() != '\n' && !isAtEnd()) { // here we don't advance if c is \n so that we increment line count later
 						advance();
 					}
 				} else {
 					addToken(SLASH);
 				}
+				break;
 			case ' ':
 			case '\r':
 			case '\t':
