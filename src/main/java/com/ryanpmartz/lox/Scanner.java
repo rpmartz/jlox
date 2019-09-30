@@ -77,6 +77,9 @@ public class Scanner {
 				addToken(STAR);
 				break;
 			default:
+				// keep scanning when you see an unexpected character in order to both
+				// avoid an infinite loop as well as ensure you show the user all errors
+				// their source has
 				Lox.error(line, "Unexpected character");
 				break;
 		}
