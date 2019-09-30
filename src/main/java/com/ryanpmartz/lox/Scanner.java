@@ -106,6 +106,14 @@ public class Scanner {
 				} else {
 					addToken(SLASH);
 				}
+			case ' ':
+			case '\r':
+			case '\t':
+				// Ignore whitespace
+				break;
+			case '\n':
+				line++;
+				break;
 			default:
 				// keep scanning when you see an unexpected character in order to both
 				// avoid an infinite loop as well as ensure you show the user all errors
