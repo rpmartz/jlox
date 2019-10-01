@@ -1,33 +1,73 @@
 package com.ryanpmartz.lox;
 
+import static com.ryanpmartz.lox.TokenType.AND;
 import static com.ryanpmartz.lox.TokenType.BANG;
 import static com.ryanpmartz.lox.TokenType.BANG_EQUAL;
+import static com.ryanpmartz.lox.TokenType.CLASS;
 import static com.ryanpmartz.lox.TokenType.COMMA;
 import static com.ryanpmartz.lox.TokenType.DOT;
+import static com.ryanpmartz.lox.TokenType.ELSE;
 import static com.ryanpmartz.lox.TokenType.EOF;
 import static com.ryanpmartz.lox.TokenType.EQUAL;
 import static com.ryanpmartz.lox.TokenType.EQUAL_EQUAL;
+import static com.ryanpmartz.lox.TokenType.FALSE;
+import static com.ryanpmartz.lox.TokenType.FOR;
+import static com.ryanpmartz.lox.TokenType.FUN;
 import static com.ryanpmartz.lox.TokenType.GREATER;
 import static com.ryanpmartz.lox.TokenType.GREATER_EQUAL;
 import static com.ryanpmartz.lox.TokenType.IDENTIFIER;
+import static com.ryanpmartz.lox.TokenType.IF;
 import static com.ryanpmartz.lox.TokenType.LEFT_BRACE;
 import static com.ryanpmartz.lox.TokenType.LEFT_PAREN;
 import static com.ryanpmartz.lox.TokenType.LESS;
 import static com.ryanpmartz.lox.TokenType.LESS_EQUAL;
 import static com.ryanpmartz.lox.TokenType.MINUS;
+import static com.ryanpmartz.lox.TokenType.NIL;
 import static com.ryanpmartz.lox.TokenType.NUMBER;
+import static com.ryanpmartz.lox.TokenType.OR;
 import static com.ryanpmartz.lox.TokenType.PLUS;
+import static com.ryanpmartz.lox.TokenType.PRINT;
+import static com.ryanpmartz.lox.TokenType.RETURN;
 import static com.ryanpmartz.lox.TokenType.RIGHT_BRACE;
 import static com.ryanpmartz.lox.TokenType.RIGHT_PAREN;
 import static com.ryanpmartz.lox.TokenType.SEMICOLON;
 import static com.ryanpmartz.lox.TokenType.SLASH;
 import static com.ryanpmartz.lox.TokenType.STAR;
 import static com.ryanpmartz.lox.TokenType.STRING;
+import static com.ryanpmartz.lox.TokenType.SUPER;
+import static com.ryanpmartz.lox.TokenType.THIS;
+import static com.ryanpmartz.lox.TokenType.TRUE;
+import static com.ryanpmartz.lox.TokenType.VAR;
+import static com.ryanpmartz.lox.TokenType.WHILE;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Scanner {
+
+	private static final Map<String, TokenType> keywords;
+
+	static {
+		keywords = new HashMap<>();
+		keywords.put("and", AND);
+		keywords.put("class", CLASS);
+		keywords.put("else", ELSE);
+		keywords.put("false", FALSE);
+		keywords.put("for", FOR);
+		keywords.put("fun", FUN);
+		keywords.put("if", IF);
+		keywords.put("nil", NIL);
+		keywords.put("or", OR);
+		keywords.put("print", PRINT);
+		keywords.put("return", RETURN);
+		keywords.put("super", SUPER);
+		keywords.put("this", THIS);
+		keywords.put("true", TRUE);
+		keywords.put("var", VAR);
+		keywords.put("while", WHILE);
+	}
 
 	private final String source;
 	private final List<Token> tokens = new ArrayList<>();
@@ -236,7 +276,11 @@ public class Scanner {
 			advance();
 		}
 
-		addToken(IDENTIFIER);
+		// see if token is a reserved word
+		String text = source.substring(start, current);
+
+		TokenType type = keywords.getOrDefault(text, IDENTIFIER);
+		addToken(type);
 	}
 
 	private boolean isAlpha(char c) {
