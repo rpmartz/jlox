@@ -9,6 +9,7 @@ import static com.ryanpmartz.lox.TokenType.EQUAL;
 import static com.ryanpmartz.lox.TokenType.EQUAL_EQUAL;
 import static com.ryanpmartz.lox.TokenType.GREATER;
 import static com.ryanpmartz.lox.TokenType.GREATER_EQUAL;
+import static com.ryanpmartz.lox.TokenType.IDENTIFIER;
 import static com.ryanpmartz.lox.TokenType.LEFT_BRACE;
 import static com.ryanpmartz.lox.TokenType.LEFT_PAREN;
 import static com.ryanpmartz.lox.TokenType.LESS;
@@ -124,6 +125,8 @@ public class Scanner {
 				// put in default case to avoid having to do cases for each numeric token
 				if (isDigit(c)) {
 					number();
+				} else if (isAlpha(c)) {
+					identifier();
 				} else {
 					// keep scanning when you see an unexpected character in order to both
 					// avoid an infinite loop as well as ensure you show the user all errors
@@ -225,4 +228,25 @@ public class Scanner {
 
 		return source.charAt(current + 1);
 	}
+
+	private void identifier() {
+		// consume whole token; maximal munch means that we use the longest
+		// string of characters that match
+		while (isAlphaNumeric(peek())) {
+			advance();
+		}
+
+		addToken(IDENTIFIER);
+	}
+
+	private boolean isAlpha(char c) {
+		return (c >= 'a' && c <= 'z')
+				|| (c >= 'A' && c <= 'Z')
+				|| c == '_';
+	}
+
+	private boolean isAlphaNumeric(char c) {
+		return isAlpha(c) || isDigit(c);
+	}
+
 }
