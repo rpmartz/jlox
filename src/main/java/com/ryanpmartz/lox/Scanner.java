@@ -14,6 +14,7 @@ import static com.ryanpmartz.lox.TokenType.LEFT_PAREN;
 import static com.ryanpmartz.lox.TokenType.LESS;
 import static com.ryanpmartz.lox.TokenType.LESS_EQUAL;
 import static com.ryanpmartz.lox.TokenType.MINUS;
+import static com.ryanpmartz.lox.TokenType.NUMBER;
 import static com.ryanpmartz.lox.TokenType.PLUS;
 import static com.ryanpmartz.lox.TokenType.RIGHT_BRACE;
 import static com.ryanpmartz.lox.TokenType.RIGHT_PAREN;
@@ -120,10 +121,15 @@ public class Scanner {
 				string();
 				break;
 			default:
-				// keep scanning when you see an unexpected character in order to both
-				// avoid an infinite loop as well as ensure you show the user all errors
-				// their source has
-				Lox.error(line, "Unexpected character");
+				// put in default case to avoid having to do cases for each numeric token
+				if (isDigit(c)) {
+					number();
+				} else {
+					// keep scanning when you see an unexpected character in order to both
+					// avoid an infinite loop as well as ensure you show the user all errors
+					// their source has
+					Lox.error(line, "Unexpected character");
+				}
 				break;
 		}
 	}
@@ -187,5 +193,36 @@ public class Scanner {
 		// trim leading and trailing quotes
 		String value = source.substring(start + 1, current - 1);
 		addToken(STRING, value);
+	}
+
+	private boolean isDigit(char c) {
+		return c >= '0' && c <= '9';
+	}
+
+	private void number() {
+		// consume whole numeric literal
+		while (isDigit(peek())) {
+			advance();
+		}
+
+		if (peek() == '.' && isDigit(peekNext())) {
+			// consume decimal but only if there are numbers after it
+			advance();
+		}
+
+		// consume numbers after decimal point
+		while (isDigit(peek())) {
+			advance();
+		}
+
+		addToken(NUMBER, Double.parseDouble(source.substring(start, current)));
+	}
+
+	private char peekNext() {
+		if (current + 1 >= source.length()) {
+			return '\0';
+		}
+
+		return source.charAt(current + 1);
 	}
 }
