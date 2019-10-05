@@ -44,6 +44,10 @@ public class AstGenerator {
 			defineType(writer, baseName, className, fields);
 		}
 
+		// add base accept() method.
+		writer.println();
+		writer.println("   abstract <R> R accept(Visitor<R> visitor);");
+
 		writer.println("}");
 		writer.close();
 
