@@ -66,3 +66,4 @@ class Beignet extends Pastry {
 In this way, to perform an operation on a pastry, we call its `accept()` method and pass in the visitor for the operation we want to execute, and the pasty, the concrete implementation of it, passes itself to the the visitor.
 
 * ***Using this trick, you can add one `accept()` method to each class and reuse it for as many visitors as you need to without ever having to touch the pastry classes again***
+* in the above example, the `visit` and `accept` methods did not return anything but in our classes we'll use generics to provide the flexibility needed to return data
