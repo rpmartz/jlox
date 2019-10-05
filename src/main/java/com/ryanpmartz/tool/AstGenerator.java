@@ -86,6 +86,12 @@ public class AstGenerator {
 
 		writer.println("    }");
 
+		// implement visitor pattern
+		writer.println();
+		writer.println("    <R> R accept(Visitor<R> visitor) {");
+		writer.println("        return visitor.visit" + className + baseName + "(this);");
+		writer.println("    }");
+
 		// Fields.
 		writer.println();
 		for (String field : fields) {
