@@ -34,6 +34,14 @@ public class Parser {
 		this.tokens = tokens;
 	}
 
+	public Expr parse() {
+		try {
+			return expression();
+		} catch (ParseError error) {
+			return null;
+		}
+	}
+
 	// when the body of the rule contains a nonterminal - a referrence to another rule, we call that rule's method
 	private Expr expression() {
 		return equality();
@@ -126,6 +134,7 @@ public class Parser {
 			return new Expr.Grouping(expr);
 		}
 
+		// if we get here, we have a token that is trying to start an expression
 		throw error(peek(), "Expect expression.");
 	}
 
