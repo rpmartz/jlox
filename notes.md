@@ -67,3 +67,7 @@ In this way, to perform an operation on a pastry, we call its `accept()` method 
 
 * ***Using this trick, you can add one `accept()` method to each class and reuse it for as many visitors as you need to without ever having to touch the pastry classes again***
 * in the above example, the `visit` and `accept` methods did not return anything but in our classes we'll use generics to provide the flexibility needed to return data
+
+## Chapter 6
+
+* when specifying a grammar, precedence and associativity rules can be used to help avoid ambiguity when parsing
