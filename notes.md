@@ -70,4 +70,14 @@ In this way, to perform an operation on a pastry, we call its `accept()` method 
 
 ## Chapter 6
 
+* in one sense, parsing is like the inverse of using rules to create productions; given a production, what rules generated it?
+* in parsing, ambiguity introduces the possibility that the parser may misunderstand the user's code
+
+* Lox's initial grammar needs some refinement; the expression `6 / 3 - 1` could be parsed as `(6 / 3) - 1` or `6 / (3/1)`
+    + i.e `expression operator number` -> `binary operator number` or `number operator expression` -> `number operator binary`
 * when specifying a grammar, precedence and associativity rules can be used to help avoid ambiguity when parsing
+     + _precedence_ determines which operator is evaluated first in an expression containing a mix of operators
+     + _associativity_ determines which operator is evaluated first
+     
+ * if an operator is *left associative*, like `-`, the operators on the left evaluate before operators on the right, e.g. `5 - 3 - 1` = `(5-3) - 1`
+ * *right-associative* operators like assignment: `a = b = c` is equivalent to `a = (b = c)`
