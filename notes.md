@@ -110,3 +110,7 @@ primary        → NUMBER | STRING | "false" | "true" | "nil"
 * the Lox parser will use `recursive descent` which is considered a `top-down parser` because it walks "down" the grammar starting at the outermost grammar rule (`expresion`) and works its way down the nested subexpressions before reaching the leaves of the syntax tree
     + by comparison, a bottom-up parser like LR start with primary expression and compose them into larger and larger chunks of syntax
 * a recursive descent parser is a literal translation of the grammar's rules straight into imperative code
+
+* While not strictly needed, error reporting is part of the parser's user interface and errors will be encountered all the time (i.e. typing in an IDE)
+* Once you do have an error, you need to jump back out to the next "valid" chunk to continue parsing, which is called *synchronization*
+* traditionally, we synchronize in between statements but we don't have them at this point
