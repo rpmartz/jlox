@@ -1,12 +1,31 @@
 package com.ryanpmartz.lox;
 
+import static com.ryanpmartz.lox.TokenType.BANG;
 import static com.ryanpmartz.lox.TokenType.BANG_EQUAL;
 import static com.ryanpmartz.lox.TokenType.EOF;
 import static com.ryanpmartz.lox.TokenType.EQUAL_EQUAL;
+import static com.ryanpmartz.lox.TokenType.FALSE;
+import static com.ryanpmartz.lox.TokenType.GREATER;
+import static com.ryanpmartz.lox.TokenType.GREATER_EQUAL;
+import static com.ryanpmartz.lox.TokenType.LEFT_PAREN;
+import static com.ryanpmartz.lox.TokenType.LESS;
+import static com.ryanpmartz.lox.TokenType.LESS_EQUAL;
+import static com.ryanpmartz.lox.TokenType.MINUS;
+import static com.ryanpmartz.lox.TokenType.NUMBER;
+import static com.ryanpmartz.lox.TokenType.PLUS;
+import static com.ryanpmartz.lox.TokenType.RIGHT_PAREN;
+import static com.ryanpmartz.lox.TokenType.SEMICOLON;
+import static com.ryanpmartz.lox.TokenType.SLASH;
+import static com.ryanpmartz.lox.TokenType.STAR;
+import static com.ryanpmartz.lox.TokenType.STRING;
+import static com.ryanpmartz.lox.TokenType.TRUE;
 
 import java.util.List;
 
 public class Parser {
+
+	private static class ParseError extends RuntimeException {
+	}
 
 	private final List<Token> tokens;
 	private int current = 0;
@@ -32,6 +51,82 @@ public class Parser {
 		}
 
 		return expr;
+	}
+
+	// comparison → addition ( ( ">" | ">=" | "<" | "<=" ) addition )* ;
+	// TODO: create a helper method for parsing left-associative binary operators in a reusable way
+	private Expr comparison() {
+		Expr expr = addition();
+
+		while (match(GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)) {
+			Token operator = previous();
+			Expr right = addition();
+			expr = new Expr.Binary(expr, operator, right);
+		}
+
+		return expr;
+	}
+
+	private Expr addition() {
+		Expr expr = multiplication();
+
+		while (match(MINUS, PLUS)) {
+			Token operator = previous();
+			Expr right = multiplication();
+			expr = new Expr.Binary(expr, operator, right);
+		}
+
+		return expr;
+	}
+
+	private Expr multiplication() {
+		Expr expr = unary();
+
+		while (match(SLASH, STAR)) {
+			Token operator = previous();
+			Expr right = unary();
+			expr = new Expr.Binary(expr, operator, right);
+		}
+
+		return expr;
+	}
+
+	private Expr unary() {
+		if (match(BANG, MINUS)) {
+			Token operator = previous();
+			Expr right = unary();
+			return new Expr.Unary(operator, right);
+		}
+
+		return primary();
+	}
+
+	private Expr primary() {
+		if (match(FALSE)) {
+			return new Expr.Literal(false);
+		}
+
+		if (match(TRUE)) {
+			return new Expr.Literal(true);
+		}
+
+		if (match(TokenType.NIL)) {
+			return new Expr.Literal(null);
+		}
+
+		if (match(NUMBER, STRING)) { // TODO: why do we return previous here?
+			return new Expr.Literal(previous().literal);
+		}
+
+		if (match(LEFT_PAREN)) {
+			Expr expr = expression();
+
+			// must have a closing parenthesis
+			consume(RIGHT_PAREN, "Expect ')' after expression.");
+			return new Expr.Grouping(expr);
+		}
+
+		throw error(peek(), "Expect expression.");
 	}
 
 	private Token advance() {
@@ -61,6 +156,14 @@ public class Parser {
 		return peek().type == type;
 	}
 
+	private Token consume(TokenType type, String message) {
+		if (check(type)) {
+			return advance();
+		}
+
+		throw error(peek(), message);
+	}
+
 	private boolean isAtEnd() {
 		return peek().type == EOF;
 	}
@@ -72,5 +175,33 @@ public class Parser {
 
 	private Token previous() {
 		return tokens.get(current - 1);
+	}
+
+	private ParseError error(Token token, String message) {
+		Lox.error(token, message);
+		return new ParseError();
+	}
+
+	// generally speaking we can synchronize on keywords and semicolons (i.e. statement boundaries)
+	private void synchronize() {
+		advance();
+
+		while (!isAtEnd()) {
+			if (previous().type == SEMICOLON) return;
+
+			switch (peek().type) {
+				case CLASS:
+				case FUN:
+				case VAR:
+				case FOR:
+				case IF:
+				case WHILE:
+				case PRINT:
+				case RETURN:
+					return;
+			}
+
+			advance();
+		}
 	}
 }
