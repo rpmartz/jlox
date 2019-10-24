@@ -79,5 +79,31 @@ In this way, to perform an operation on a pastry, we call its `accept()` method 
      + _precedence_ determines which operator is evaluated first in an expression containing a mix of operators
      + _associativity_ determines which operator is evaluated first
      
- * if an operator is *left associative*, like `-`, the operators on the left evaluate before operators on the right, e.g. `5 - 3 - 1` = `(5-3) - 1`
- * *right-associative* operators like assignment: `a = b = c` is equivalent to `a = (b = c)`
+* if an operator is *left associative*, like `-`, the operators on the left evaluate before operators on the right, e.g. `5 - 3 - 1` = `(5-3) - 1`
+* *right-associative* operators like assignment: `a = b = c` is equivalent to `a = (b = c)`
+* Lox uses the same precedence as C:
+    + unary (`!` and `-`) (right associative) 
+    + multiplication (`*` and `/`)
+    + addition (`-` and `+`)
+    + comparison (`>`, `>-`, `<`, `<=`)
+    + equality (`==` and `!=`)
+    
+* given those preference rules, the rule `binary -> expression operator expression` is problematic because we can pick any kind of expression as an operand, regardless of which operator we picked, but we cannot have `+` as an operand of a `*` expression because the `+` has lower precedence
+    + it's more accurate to say `multiplication -> unary ("*" | "/") unary` but that breaks associativity and does not allow chained multiplication
+    + `multiplication -> multiplication ("*" | "/" ) unary` is correct, noting that the grouping on the left makes it left-associative, but when you have the first nonterminal in the body of the rule the same as the head of a rele, your proudction is **left-recursive**, which some parsing techniques have trouble with
+    + `multiplication -> unary ( ("/" | "*") unary )*` sidesteps left recursion by saying a multiplication expression is a flat sequence of multiplications or divisions
+    
+### New Grammar
+
+```
+expression     → equality ;
+equality       → comparison ( ( "!=" | "==" ) comparison )* ;
+comparison     → addition ( ( ">" | ">=" | "<" | "<=" ) addition )* ;
+addition       → multiplication ( ( "-" | "+" ) multiplication )* ;
+multiplication → unary ( ( "/" | "*" ) unary )* ;
+unary          → ( "!" | "-" ) unary
+               | primary ;
+primary        → NUMBER | STRING | "false" | "true" | "nil"
+               | "(" expression ")" ;
+```
+
