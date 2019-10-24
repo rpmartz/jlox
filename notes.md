@@ -107,3 +107,6 @@ primary        → NUMBER | STRING | "false" | "true" | "nil"
                | "(" expression ")" ;
 ```
 
+* the Lox parser will use `recursive descent` which is considered a `top-down parser` because it walks "down" the grammar starting at the outermost grammar rule (`expresion`) and works its way down the nested subexpressions before reaching the leaves of the syntax tree
+    + by comparison, a bottom-up parser like LR start with primary expression and compose them into larger and larger chunks of syntax
+* a recursive descent parser is a literal translation of the grammar's rules straight into imperative code
