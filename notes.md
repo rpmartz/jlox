@@ -124,3 +124,7 @@ primary        → NUMBER | STRING | "false" | "true" | "nil"
     + tell if two objects are equal
     
 * if we can determine an object's type, we can implement thee as methods that check the type and do the right thing for each type of value
+
+### 7.2 Evaluating Expressions
+
+* We need blobs of code to implement the evaluation logic for each kind of expression we parse. We could put them into the syntax tree classes directly in something like an `interpret()` method, **this is GoF's _Intepreter_ design pattern** but this gets messy by jamming different logic into the tree classes
