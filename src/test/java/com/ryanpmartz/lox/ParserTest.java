@@ -13,11 +13,7 @@ public class ParserTest {
 	public void testSimpleEquality() {
 		String s = "5 + 7";
 
-		Scanner scanner = new Scanner(s);
-		List<Token> tokens = scanner.scanTokens();
-
-		Parser parser = new Parser(tokens);
-		Expr expr = parser.parse();
+		Expr expr = parseToTree(s);
 
 		assertTrue(expr instanceof Expr.Binary);
 
@@ -30,4 +26,30 @@ public class ParserTest {
 		assertEquals(5.0, ((Expr.Literal) binary.left).value);
 		assertEquals(7.0, ((Expr.Literal) binary.right).value);
 	}
+
+	@Test
+	public void testComplicatedLessThan() {
+		String expression = "4 * 6 / 3 >= 10 / 2 - 1";
+		Expr expr = parseToTree(expression);
+
+		System.out.println(new AstPrinter().print(expr));
+	}
+
+	public void testSimpleLessThan() {
+		String expression = "4 <= 6";
+
+		Expr expr = parseToTree(expression);
+
+
+	}
+
+	private Expr parseToTree(String expression) {
+		Scanner scanner = new Scanner(expression);
+		List<Token> tokens = scanner.scanTokens();
+
+		Parser parser = new Parser(tokens);
+		return parser.parse();
+	}
+
+
 }
