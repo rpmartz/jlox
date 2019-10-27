@@ -114,3 +114,13 @@ primary        → NUMBER | STRING | "false" | "true" | "nil"
 * While not strictly needed, error reporting is part of the parser's user interface and errors will be encountered all the time (i.e. typing in an IDE)
 * Once you do have an error, you need to jump back out to the next "valid" chunk to continue parsing, which is called *synchronization*
 * traditionally, we synchronize in between statements but we don't have them at this point
+
+## Chapter 7
+
+* Thinking about what an interpreter does, given some value we need to :
+
+    + determine its type (at runtime since Lox is dynamically typed)
+    + tell if the object is truthy or not (if it is in an `if` condition)
+    + tell if two objects are equal
+    
+* if we can determine an object's type, we can implement thee as methods that check the type and do the right thing for each type of value
