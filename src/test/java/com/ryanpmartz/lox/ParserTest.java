@@ -35,12 +35,17 @@ public class ParserTest {
 		System.out.println(new AstPrinter().print(expr));
 	}
 
+	@Test
 	public void testSimpleLessThan() {
 		String expression = "4 <= 6";
 
 		Expr expr = parseToTree(expression);
 
+		assertTrue(expr instanceof Expr.Binary);
 
+		Expr.Binary binary = ((Expr.Binary) expr);
+
+		assertEquals(TokenType.LESS_EQUAL, binary.operator.type);
 	}
 
 	private Expr parseToTree(String expression) {
