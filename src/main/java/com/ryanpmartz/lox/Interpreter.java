@@ -47,6 +47,7 @@ public class Interpreter implements Expr.Visitor<Object> {
 			case LESS_EQUAL:
 				return (double) left <= (double) right;
 			case MINUS:
+				checkNumberOperand(expr.operator, right);
 				return (double) left - (double) right;
 			case BANG_EQUAL:
 				return !isEqual(left, right);
@@ -93,5 +94,12 @@ public class Interpreter implements Expr.Visitor<Object> {
 		}
 
 		return a.equals(b);
+	}
+
+	private void checkNumberOperand(Token operator, Object operand) {
+		boolean isDouble = operand instanceof Double;
+		if (!isDouble) {
+			throw new LoxRuntimeError(operator, "Operand must be a number");
+		}
 	}
 }
