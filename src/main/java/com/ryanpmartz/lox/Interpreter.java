@@ -23,6 +23,7 @@ public class Interpreter implements Expr.Visitor<Object> {
 
 		switch (expr.operator.type) {
 			case MINUS:
+				checkNumberOperand(expr.operator, right);
 				return -(double) right;
 			case BANG:
 				return !isTruthy(right);
@@ -39,15 +40,19 @@ public class Interpreter implements Expr.Visitor<Object> {
 
 		switch (expr.operator.type) {
 			case GREATER:
+				checkNumberOperands(expr.operator, left, right);
 				return (double) left > (double) right;
 			case GREATER_EQUAL:
+				checkNumberOperands(expr.operator, left, right);
 				return (double) left >= (double) right;
 			case LESS:
+				checkNumberOperands(expr.operator, left, right);
 				return (double) left < (double) right;
 			case LESS_EQUAL:
+				checkNumberOperands(expr.operator, left, right);
 				return (double) left <= (double) right;
 			case MINUS:
-				checkNumberOperand(expr.operator, right);
+				checkNumberOperands(expr.operator, left, right);
 				return (double) left - (double) right;
 			case BANG_EQUAL:
 				return !isEqual(left, right);
@@ -61,9 +66,14 @@ public class Interpreter implements Expr.Visitor<Object> {
 				if (left instanceof String && right instanceof String) {
 					return (String) left + (String) right;
 				}
+
+				throw new LoxRuntimeError(expr.operator,
+						"Operands must be two numbers or two strings.");
 			case SLASH:
+				checkNumberOperands(expr.operator, left, right);
 				return (double) left / (double) right;
 			case STAR:
+				checkNumberOperands(expr.operator, left, right);
 				return (double) left * (double) right;
 
 		}
@@ -100,6 +110,13 @@ public class Interpreter implements Expr.Visitor<Object> {
 		boolean isDouble = operand instanceof Double;
 		if (!isDouble) {
 			throw new LoxRuntimeError(operator, "Operand must be a number");
+		}
+	}
+
+	private void checkNumberOperands(Token operator, Object left, Object right) {
+		boolean bothAreDoubles = left instanceof Double && right instanceof Double;
+		if (!bothAreDoubles) {
+			throw new LoxRuntimeError(operator, "Operands must be numbers");
 		}
 	}
 }
