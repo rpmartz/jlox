@@ -2,6 +2,33 @@ package com.ryanpmartz.lox;
 
 public class Interpreter implements Expr.Visitor<Object> {
 
+	public void interpret(Expr expression) {
+		try {
+			Object value = evaluate(expression);
+			System.out.println(stringify(value));
+		} catch (LoxRuntimeError err) {
+			Lox.runtimeError(err);
+		}
+	}
+
+	private String stringify(Object object) {
+		if (object == null) {
+			return "nil";
+		}
+
+		// Hack to work around Java addding ".0" to integer-value doubles.
+		if (object instanceof Double) {
+			String text = object.toString();
+			if (text.endsWith(".0")) {
+				text = text.substring(0, text.length() - 2);
+			}
+
+			return text;
+		}
+
+		return object.toString();
+	}
+
 	// a literal tree node just translates to a literal runtime value
 	@Override
 	public Object visitLiteralExpr(Expr.Literal expr) {
