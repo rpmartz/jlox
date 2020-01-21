@@ -13,6 +13,7 @@ import static com.ryanpmartz.lox.TokenType.LESS_EQUAL;
 import static com.ryanpmartz.lox.TokenType.MINUS;
 import static com.ryanpmartz.lox.TokenType.NUMBER;
 import static com.ryanpmartz.lox.TokenType.PLUS;
+import static com.ryanpmartz.lox.TokenType.PRINT;
 import static com.ryanpmartz.lox.TokenType.RIGHT_PAREN;
 import static com.ryanpmartz.lox.TokenType.SEMICOLON;
 import static com.ryanpmartz.lox.TokenType.SLASH;
@@ -20,6 +21,7 @@ import static com.ryanpmartz.lox.TokenType.STAR;
 import static com.ryanpmartz.lox.TokenType.STRING;
 import static com.ryanpmartz.lox.TokenType.TRUE;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Parser {
@@ -34,18 +36,41 @@ public class Parser {
 		this.tokens = tokens;
 	}
 
-	public Expr parse() {
-		try {
-			return expression();
-		} catch (ParseError error) {
-			return null;
+	public List<Stmt> parse() {
+		List<Stmt> statements = new ArrayList<>();
+		while (!isAtEnd()) {
+			statements.add(statement());
 		}
+
+		return statements;
 	}
 
 	// when the body of the rule contains a nonterminal - a referrence to another rule, we call that rule's method
 	private Expr expression() {
 		return equality();
 	}
+
+	private Stmt statement() {
+		if (match(PRINT)) {
+			return printStatement();
+		}
+
+		return expressionStatement();
+	}
+
+	private Stmt printStatement() {
+		Expr value = expression();
+		consume(SEMICOLON, "Expect ';' after value");
+		return new Stmt.Print(value);
+	}
+
+	private Stmt expressionStatement() {
+		Expr expr = expression();
+		consume(SEMICOLON, "Expect ';' after value");
+
+		return new Stmt.Expression(expr);
+	}
+
 
 	// equality → comparison ( ( "!=" | "==" ) comparison )* ;
 	private Expr equality() {
