@@ -128,3 +128,10 @@ primary        → NUMBER | STRING | "false" | "true" | "nil"
 ### 7.2 Evaluating Expressions
 
 * We need blobs of code to implement the evaluation logic for each kind of expression we parse. We could put them into the syntax tree classes directly in something like an `interpret()` method, **this is GoF's _Intepreter_ design pattern** but this gets messy by jamming different logic into the tree classes
+
+* _literals_ are something in the user's source code (as opposed to some kind of computed value that don't exist in the user's source code)
+
+## Chapter 8 
+
+* There is no place in the grammar where both an expression and a statement is allowed.
+
