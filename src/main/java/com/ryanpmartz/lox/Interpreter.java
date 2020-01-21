@@ -1,6 +1,6 @@
 package com.ryanpmartz.lox;
 
-public class Interpreter implements Expr.Visitor<Object> {
+public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
 	public void interpret(Expr expression) {
 		try {
@@ -106,6 +106,20 @@ public class Interpreter implements Expr.Visitor<Object> {
 		}
 
 		// Unreachable
+		return null;
+	}
+
+	@Override
+	public Void visitExpressionStmt(Stmt.Expression stmt) {
+		evaluate(stmt.expression);
+		return null;
+	}
+
+	@Override
+	public Void visitPrintStmt(Stmt.Print stmt) {
+		Object value = evaluate(stmt.expression);
+		System.out.println(stringify(value));
+
 		return null;
 	}
 
