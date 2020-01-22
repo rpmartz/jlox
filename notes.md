@@ -133,5 +133,15 @@ primary        → NUMBER | STRING | "false" | "true" | "nil"
 
 ## Chapter 8 
 
+```
+program   → statement* EOF ;
+
+statement → exprStmt
+          | printStmt ;
+
+exprStmt  → expression ";" ;
+printStmt → "print" expression ";" ;
+```
+
 * There is no place in the grammar where both an expression and a statement is allowed.
 
