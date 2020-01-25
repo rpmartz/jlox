@@ -145,3 +145,29 @@ printStmt → "print" expression ";" ;
 
 * There is no place in the grammar where both an expression and a statement is allowed.
 
+* once we add variables, the grammar looks like this:
+
+```
+program     → declaration* EOF ;
+
+declaration → varDecl
+            | statement ;
+
+statement   → exprStmt
+            | printStmt ;
+```
+
+where the rule for defining a variable looks like:
+
+```
+varDecl -> "var" IDENTIFIER ( "=" expression )? ";"
+```
+
+accessing a variable, we define a new kind of primary expression:
+
+```
+primary → "true" | "false" | "nil"
+        | NUMBER | STRING
+        | "(" expression ")"
+        | IDENTIFIER ;
+```
