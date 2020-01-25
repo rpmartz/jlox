@@ -3,10 +3,12 @@ package com.ryanpmartz.lox;
 import static com.ryanpmartz.lox.TokenType.BANG;
 import static com.ryanpmartz.lox.TokenType.BANG_EQUAL;
 import static com.ryanpmartz.lox.TokenType.EOF;
+import static com.ryanpmartz.lox.TokenType.EQUAL;
 import static com.ryanpmartz.lox.TokenType.EQUAL_EQUAL;
 import static com.ryanpmartz.lox.TokenType.FALSE;
 import static com.ryanpmartz.lox.TokenType.GREATER;
 import static com.ryanpmartz.lox.TokenType.GREATER_EQUAL;
+import static com.ryanpmartz.lox.TokenType.IDENTIFIER;
 import static com.ryanpmartz.lox.TokenType.LEFT_PAREN;
 import static com.ryanpmartz.lox.TokenType.LESS;
 import static com.ryanpmartz.lox.TokenType.LESS_EQUAL;
@@ -20,6 +22,7 @@ import static com.ryanpmartz.lox.TokenType.SLASH;
 import static com.ryanpmartz.lox.TokenType.STAR;
 import static com.ryanpmartz.lox.TokenType.STRING;
 import static com.ryanpmartz.lox.TokenType.TRUE;
+import static com.ryanpmartz.lox.TokenType.VAR;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,11 +42,37 @@ public class Parser {
 	public List<Stmt> parse() {
 		List<Stmt> statements = new ArrayList<>();
 		while (!isAtEnd()) {
-			statements.add(statement());
+			statements.add(declaration());
 		}
 
 		return statements;
 	}
+
+	private Stmt declaration() {
+		try {
+			if (match(VAR)) {
+				return valDeclaration();
+			}
+
+			return statement();
+		} catch (ParseError error) {
+			synchronize();
+			return null;
+		}
+	}
+
+	private Stmt valDeclaration() {
+		Token name = consume(IDENTIFIER, "Expect variable name");
+
+		Expr initializer = null;
+		if (match(EQUAL)) {
+			initializer = expression();
+		}
+
+		consume(SEMICOLON, "Expect ';' after variable declaration");
+		return new Stmt.Var(name, initializer);
+	}
+
 
 	// when the body of the rule contains a nonterminal - a referrence to another rule, we call that rule's method
 	private Expr expression() {
