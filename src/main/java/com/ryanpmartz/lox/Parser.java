@@ -180,6 +180,10 @@ public class Parser {
 			return new Expr.Literal(previous().literal);
 		}
 
+		if (match(IDENTIFIER)) {
+			return new Expr.Variable(previous());
+		}
+
 		if (match(LEFT_PAREN)) {
 			Expr expr = expression();
 
