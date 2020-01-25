@@ -6,9 +6,15 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.List;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class ScannerTest {
+
+	@Test
+	public void testTryingToScanNull() {
+		Assertions.assertThrows(IllegalArgumentException.class, () -> new Scanner(null));
+	}
 
 	@Test
 	public void testTwoBrackets() {
