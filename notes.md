@@ -171,3 +171,38 @@ primary → "true" | "false" | "nil"
         | "(" expression ")"
         | IDENTIFIER ;
 ```
+
+### 8.3 Environments
+
+* an _environment_ is the name for the area with the association of names to values, and is named such since that's what the Lispers called it.
+* This is implemented as a hash table for lookups
+ 
+### 8.4 Assignment
+ 
+ * In Lox and in most C style languages, assignment is an expression and not a statement
+ * As in C, it is the lowest precedence expression form, so it slots between expression and equality, the next lowest precedence operator: 
+ 
+ ```
+expression → assignment ;
+assignment → IDENTIFIER "=" assignment
+           | equality ;
+```
+
+### 8.5 Scope
+
+* a **scope** is a region where a name maps to a certain entity
+* **lexical scope**, sometimes called **static scope**, is a specific style of scope where the
+text of the program itself shows the scope of the variable (e.g. within a block)
+* **dynamic scope** is where you don't know what the variable is until you execute the code, e.g.:
+
+```
+fun playIt(thing) {
+    thing.play();
+}
+```
+
+it's not clear what `thing` is just by reading the code
+
+## Questions
+
+* How does a multi-file interpeter work/parse the programs?
