@@ -16,6 +16,7 @@ import static com.ryanpmartz.lox.TokenType.MINUS;
 import static com.ryanpmartz.lox.TokenType.NUMBER;
 import static com.ryanpmartz.lox.TokenType.PLUS;
 import static com.ryanpmartz.lox.TokenType.PRINT;
+import static com.ryanpmartz.lox.TokenType.RIGHT_BRACE;
 import static com.ryanpmartz.lox.TokenType.RIGHT_PAREN;
 import static com.ryanpmartz.lox.TokenType.SEMICOLON;
 import static com.ryanpmartz.lox.TokenType.SLASH;
@@ -102,6 +103,10 @@ public class Parser {
 			return printStatement();
 		}
 
+		if (match(RIGHT_BRACE)) {
+			return new Stmt.Block(block());
+		}
+
 		return expressionStatement();
 	}
 
@@ -116,6 +121,17 @@ public class Parser {
 		consume(SEMICOLON, "Expect ';' after value");
 
 		return new Stmt.Expression(expr);
+	}
+
+	private List<Stmt> block() {
+		List<Stmt> statements = new ArrayList<>();
+
+		while (!check(RIGHT_BRACE) && !isAtEnd()) {
+			statements.add(declaration());
+		}
+
+		consume(RIGHT_BRACE, "Expect '}' after block.");
+		return statements;
 	}
 
 
