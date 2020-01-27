@@ -77,10 +77,6 @@ public class Scanner {
 	private int line = 1;
 
 	public Scanner(String source) {
-		if (source == null) {
-			throw new IllegalArgumentException("source to parse cannot be null");
-		}
-
 		this.source = source;
 	}
 
