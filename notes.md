@@ -201,8 +201,23 @@ fun playIt(thing) {
 }
 ```
 
-it's not clear what `thing` is just by reading the code
+it's not clear what `thing` is just by reading the code.
+
+* In order to give a block access to variables in "higher"/"outer" scopes, each environment has a reference to its parent environment
+
+#### 8.5.2 Block Syntax and semantics
+
+Now that we have nested environments, the grammar expands like so:
+
+```
+statement → exprStmt
+          | printStmt
+          | block ;
+
+block     → "{" declaration* "}" ;
+```
 
 ## Questions
 
 * How does a multi-file interpeter work/parse the programs?
+* can lox set a variable to a block?
