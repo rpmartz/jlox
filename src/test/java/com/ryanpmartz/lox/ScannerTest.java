@@ -75,4 +75,13 @@ class ScannerTest {
 		assertEquals(5.0, thirdToken.literal);
 	}
 
+	@Test
+	public void testMultiLine() {
+		String source = "{var dog = \"Bandit\";\nprint dog;}";
+		List<Token> tokens = new Scanner(source).scanTokens();
+		for (Token token : tokens) {
+			System.out.println(token);
+		}
+	}
+
 }
