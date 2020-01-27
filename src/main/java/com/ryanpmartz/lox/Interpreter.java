@@ -159,6 +159,25 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 		return value; // return value since assignment is an expression, e.g. `print a = 2` prints 2
 	}
 
+	@Override
+	public Void visitBlockStmt(Stmt.Block stmt) {
+		executeBlock(stmt.statements, new Environment(environment));
+		return null;
+	}
+
+	private void executeBlock(List<Stmt> statements, Environment environment) {
+		Environment previous = this.environment;
+		try {
+			this.environment = environment;
+
+			for (Stmt statement : statements) {
+				execute(statement);
+			}
+		} finally {
+			this.environment = previous;
+		}
+	}
+
 	private boolean isTruthy(Object object) {
 		if (object == null) {
 			return false;
