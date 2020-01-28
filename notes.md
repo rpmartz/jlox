@@ -217,7 +217,22 @@ statement → exprStmt
 block     → "{" declaration* "}" ;
 ```
 
+## 9 Control Flow
+
+* We add a new `ifStmt` production to the grammar to support branching:
+
+
+```
+statement → exprStmt
+          | ifStmt
+          | printStmt
+          | block ;
+
+ifStmt    → "if" "(" expression ")" statement ( "else" statement )? ;
+```
+
 ## Questions
 
 * How does a multi-file interpeter work/parse the programs?
 * can lox set a variable to a block?
+* How does the JVM pass metadata like line numbers and method calls to runtime?
