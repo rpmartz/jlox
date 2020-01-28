@@ -2,6 +2,7 @@ package com.ryanpmartz.lox;
 
 import static com.ryanpmartz.lox.TokenType.BANG;
 import static com.ryanpmartz.lox.TokenType.BANG_EQUAL;
+import static com.ryanpmartz.lox.TokenType.ELSE;
 import static com.ryanpmartz.lox.TokenType.EOF;
 import static com.ryanpmartz.lox.TokenType.EQUAL;
 import static com.ryanpmartz.lox.TokenType.EQUAL_EQUAL;
@@ -9,6 +10,7 @@ import static com.ryanpmartz.lox.TokenType.FALSE;
 import static com.ryanpmartz.lox.TokenType.GREATER;
 import static com.ryanpmartz.lox.TokenType.GREATER_EQUAL;
 import static com.ryanpmartz.lox.TokenType.IDENTIFIER;
+import static com.ryanpmartz.lox.TokenType.IF;
 import static com.ryanpmartz.lox.TokenType.LEFT_PAREN;
 import static com.ryanpmartz.lox.TokenType.LESS;
 import static com.ryanpmartz.lox.TokenType.LESS_EQUAL;
@@ -99,6 +101,10 @@ public class Parser {
 	}
 
 	private Stmt statement() {
+		if (match(IF)) {
+			return ifStatement();
+		}
+
 		if (match(PRINT)) {
 			return printStatement();
 		}
@@ -108,6 +114,20 @@ public class Parser {
 		}
 
 		return expressionStatement();
+	}
+
+	private Stmt ifStatement() {
+		consume(LEFT_PAREN, "Expect ( after if statement");
+		Expr condition = expression();
+		consume(RIGHT_PAREN, "Expect ) after conditional");
+
+		Stmt thenBranch = statement();
+		Stmt elseBranch = null;
+		if (match(ELSE)) {
+			elseBranch = statement();
+		}
+
+		return new Stmt.If(condition, thenBranch, elseBranch);
 	}
 
 	private Stmt printStatement() {
