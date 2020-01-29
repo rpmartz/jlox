@@ -236,3 +236,4 @@ ifStmt    → "if" "(" expression ")" statement ( "else" statement )? ;
 * How does a multi-file interpeter work/parse the programs?
 * can lox set a variable to a block?
 * How does the JVM pass metadata like line numbers and method calls to runtime?
+* How is a GIL implemented?
