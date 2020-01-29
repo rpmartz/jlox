@@ -231,7 +231,7 @@ statement → exprStmt
 ifStmt    → "if" "(" expression ")" statement ( "else" statement )? ;
 ```
 
-### 9.3
+### 9.3 Logical Operators
 
 * logical operators like `or` and `and` are different than other binary operators because of short-circuiting
 * binary conditionals in the grammar:
@@ -244,9 +244,24 @@ logic_or   → logic_and ( "or" logic_and )* ;
 logic_and  → equality ( "and" equality )* ;
 ```
 
+### 9.4 While loops
+
+* New Grammar with while loops:
+
+```
+statement → exprStmt
+          | ifStmt
+          | printStmt
+          | whileStmt
+          | block ;
+
+whileStmt → "while" "(" expression ")" statement ;
+```
+
 ## Questions
 
 * How does a multi-file interpeter work/parse the programs?
 * can lox set a variable to a block?
 * How does the JVM pass metadata like line numbers and method calls to runtime?
 * How is a GIL implemented?
+* In the grammar in 9.4 for while loops, it seems you could use assignment within the while loop?
