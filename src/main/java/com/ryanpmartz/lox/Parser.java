@@ -28,6 +28,7 @@ import static com.ryanpmartz.lox.TokenType.STAR;
 import static com.ryanpmartz.lox.TokenType.STRING;
 import static com.ryanpmartz.lox.TokenType.TRUE;
 import static com.ryanpmartz.lox.TokenType.VAR;
+import static com.ryanpmartz.lox.TokenType.WHILE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,11 +136,24 @@ public class Parser {
 			return printStatement();
 		}
 
+		if (match(WHILE)) {
+			return whileStatement();
+		}
+
 		if (match(RIGHT_BRACE)) {
 			return new Stmt.Block(block());
 		}
 
 		return expressionStatement();
+	}
+
+	private Stmt whileStatement() {
+		consume(LEFT_PAREN, "Expect '(' after 'while'");
+		Expr condition = expression();
+		consume(RIGHT_PAREN, "Expect ')' after condition in 'while'");
+		Stmt body = statement();
+
+		return new Stmt.While(condition, body);
 	}
 
 	private Stmt ifStatement() {
