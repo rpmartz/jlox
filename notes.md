@@ -231,6 +231,19 @@ statement → exprStmt
 ifStmt    → "if" "(" expression ")" statement ( "else" statement )? ;
 ```
 
+### 9.3
+
+* logical operators like `or` and `and` are different than other binary operators because of short-circuiting
+* binary conditionals in the grammar:
+
+```
+expression → assignment ;
+assignment → identifier "=" assignment
+           | logic_or ;
+logic_or   → logic_and ( "or" logic_and )* ;
+logic_and  → equality ( "and" equality )* ;
+```
+
 ## Questions
 
 * How does a multi-file interpeter work/parse the programs?
