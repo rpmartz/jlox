@@ -282,3 +282,10 @@ forStmt   → "for" "(" ( varDecl | exprStmt | ";" )
 * How does the JVM pass metadata like line numbers and method calls to runtime?
 * How is a GIL implemented?
 * In the grammar in 9.4 for while loops, it seems you could use assignment within the while loop?
+
+## TODOs
+
+* go back over the todos
+* make a parser using a parser generator like yacc or Antlr or Jacc
+* implement modulus
+* make a syntax highlighter plugin for Lox
