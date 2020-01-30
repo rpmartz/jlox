@@ -258,6 +258,23 @@ statement → exprStmt
 whileStmt → "while" "(" expression ")" statement ;
 ```
 
+### 9.5 For Loops
+
+```
+statement → exprStmt
+          | forStmt
+          | ifStmt
+          | printStmt
+          | whileStmt
+          | block ;
+
+forStmt   → "for" "(" ( varDecl | exprStmt | ";" )
+                      expression? ";"
+                      expression? ")" statement ;
+```
+
+* under the covers, a for loop is just syntactic sugar for a `while` loop
+
 ## Questions
 
 * How does a multi-file interpeter work/parse the programs?
