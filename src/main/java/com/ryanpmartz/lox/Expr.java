@@ -1,10 +1,14 @@
 package com.ryanpmartz.lox;
 
+import java.util.List;
+
 abstract class Expr {
     interface Visitor<R> {
         R visitAssignExpr(Assign expr);
 
         R visitBinaryExpr(Binary expr);
+
+        R visitCallExpr(Call expr);
 
         R visitGroupingExpr(Grouping expr);
 
@@ -45,6 +49,22 @@ abstract class Expr {
         final Expr left;
         final Token operator;
         final Expr right;
+    }
+
+    static class Call extends Expr {
+        Call(Expr call, Token paren, List<Expr> arguments) {
+            this.call = call;
+            this.paren = paren;
+            this.arguments = arguments;
+        }
+
+        <R> R accept(Visitor<R> visitor) {
+            return visitor.visitCallExpr(this);
+        }
+
+        final Expr call;
+        final Token paren;
+        final List<Expr> arguments;
     }
 
     static class Grouping extends Expr {
