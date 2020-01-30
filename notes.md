@@ -275,6 +275,20 @@ forStmt   → "for" "(" ( varDecl | exprStmt | ";" )
 
 * under the covers, a for loop is just syntactic sugar for a `while` loop
 
+# 10 Functions
+
+* the `call` function operator needs to have higher precedence, so it slots into the grammar where unary was:
+
+```
+unary → ( "!" | "-" ) unary | call ;
+call  → primary ( "(" arguments? ")" )* ;
+```
+
+* Where `call` is a `primary` expression followed by zero or more function calls
+* arguments are:
+
+`arguments -> expression ("," expression )* ;`
+
 ## Questions
 
 * How does a multi-file interpeter work/parse the programs?
