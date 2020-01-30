@@ -12,6 +12,7 @@ import static com.ryanpmartz.lox.TokenType.GREATER;
 import static com.ryanpmartz.lox.TokenType.GREATER_EQUAL;
 import static com.ryanpmartz.lox.TokenType.IDENTIFIER;
 import static com.ryanpmartz.lox.TokenType.IF;
+import static com.ryanpmartz.lox.TokenType.LEFT_BRACE;
 import static com.ryanpmartz.lox.TokenType.LEFT_PAREN;
 import static com.ryanpmartz.lox.TokenType.LESS;
 import static com.ryanpmartz.lox.TokenType.LESS_EQUAL;
@@ -140,7 +141,7 @@ public class Parser {
 			return whileStatement();
 		}
 
-		if (match(RIGHT_BRACE)) {
+		if (match(LEFT_BRACE)) {
 			return new Stmt.Block(block());
 		}
 
