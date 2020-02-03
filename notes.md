@@ -289,6 +289,23 @@ call  → primary ( "(" arguments? ")" )* ;
 
 `arguments -> expression ("," expression )* ;`
 
+* adding the `clock` function is an example of how to add native/foreign functionality to the interpreter so that it can use functionality provided by the runtime in order to be more useful and not have to implement everything itslf
+
+### 10.3 Function Declarations
+
+Grammar once we add function delarations:
+
+```
+declaration → funDecl
+            | varDecl
+            | statement ;
+
+funDecl  → "fun" function ;
+function → IDENTIFIER "(" parameters? ")" block ;
+parameters → IDENTIFIER ( "," IDENTIFIER )* ;
+```
+
+
 ## Questions
 
 * How does a multi-file interpeter work/parse the programs?
@@ -302,4 +319,6 @@ call  → primary ( "(" arguments? ")" )* ;
 * go back over the todos
 * make a parser using a parser generator like yacc or Antlr or Jacc
 * implement modulus
-* make a syntax highlighter plugin for Lox
+* make a syntax highlighter plugin for Lox 
+* Look at the difference between parsing zero-or-more operators in right vs. left assocativity
+* how do instance methods where `this`/`self` is passed explicitly or implicitly?
