@@ -313,6 +313,7 @@ parameters → IDENTIFIER ( "," IDENTIFIER )* ;
 * How does the JVM pass metadata like line numbers and method calls to runtime?
 * How is a GIL implemented?
 * In the grammar in 9.4 for while loops, it seems you could use assignment within the while loop?
+* what happens (maybe happened) when you couldn't fit the whole program into RAM?
 
 ## TODOs
 
