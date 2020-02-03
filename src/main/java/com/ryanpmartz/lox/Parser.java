@@ -10,6 +10,7 @@ import static com.ryanpmartz.lox.TokenType.EQUAL;
 import static com.ryanpmartz.lox.TokenType.EQUAL_EQUAL;
 import static com.ryanpmartz.lox.TokenType.FALSE;
 import static com.ryanpmartz.lox.TokenType.FOR;
+import static com.ryanpmartz.lox.TokenType.FUN;
 import static com.ryanpmartz.lox.TokenType.GREATER;
 import static com.ryanpmartz.lox.TokenType.GREATER_EQUAL;
 import static com.ryanpmartz.lox.TokenType.IDENTIFIER;
@@ -61,6 +62,10 @@ public class Parser {
 
 	private Stmt declaration() {
 		try {
+			if (match(FUN)) {
+				return function("function");
+			}
+
 			if (match(VAR)) {
 				return valDeclaration();
 			}
@@ -70,6 +75,30 @@ public class Parser {
 			synchronize();
 			return null;
 		}
+	}
+
+	private Stmt.Function function(String kind) { // used for functions and methods inside classes, hence the `kind` param
+		Token name = consume(IDENTIFIER, "Expect " + kind + " name.");
+
+		// parse arguments
+		consume(LEFT_PAREN, "Expect '(' after " + kind + " name.");
+		List<Token> parameters = new ArrayList<>();
+		if (!check(RIGHT_PAREN)) {
+			do {
+				if (parameters.size() >= 255) {
+					error(peek(), "Cannot have more than 255 parameters.");
+				}
+
+				parameters.add(consume(IDENTIFIER, "Expect parameter name."));
+			} while (match(COMMA));
+		}
+
+		consume(RIGHT_PAREN, "Expect ') after " + kind + " parameter list");
+
+		// parse function body and wrap it up in a function
+		consume(LEFT_BRACE, "Expect '{' before " + kind + " body.");
+		List<Stmt> body = block();
+		return new Stmt.Function(name, parameters, body);
 	}
 
 	private Stmt valDeclaration() {

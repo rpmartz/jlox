@@ -52,8 +52,8 @@ abstract class Expr {
     }
 
     static class Call extends Expr {
-        Call(Expr call, Token paren, List<Expr> arguments) {
-            this.call = call;
+        Call(Expr callee, Token paren, List<Expr> arguments) {
+            this.callee = callee;
             this.paren = paren;
             this.arguments = arguments;
         }
@@ -62,7 +62,7 @@ abstract class Expr {
             return visitor.visitCallExpr(this);
         }
 
-        final Expr call;
+        final Expr callee;
         final Token paren;
         final List<Expr> arguments;
     }
