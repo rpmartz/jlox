@@ -305,6 +305,7 @@ function → IDENTIFIER "(" parameters? ")" block ;
 parameters → IDENTIFIER ( "," IDENTIFIER )* ;
 ```
 
+* Function declarations are different from other literal nodes in that the declaration also binds the resulting object to a new variable
 
 ## Questions
 
