@@ -1,10 +1,32 @@
 package com.ryanpmartz.lox;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
-	private Environment environment = new Environment();
+	final Environment globals = new Environment();
+	private Environment environment = globals;
+
+	public Interpreter() {
+		globals.define("clock", new LoxCallable() {
+			@Override
+			public int arity() {
+				return 0;
+			}
+
+			@Override
+			public Object call(Interpreter interpreter, List<Object> arguments) {
+				return (double) System.currentTimeMillis() / 1000.0;
+			}
+
+			@Override
+			public String toString() {
+				return "<native fn>";
+			}
+		});
+
+	}
 
 	// a List<Stmt> is AKA a program
 	public void interpret(List<Stmt> statements) {
@@ -199,6 +221,34 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 		}
 
 		return null;
+	}
+
+	@Override
+	public Object visitCallExpr(Expr.Call expr) {
+		Object callee = evaluate(expr.callee);
+
+		List<Object> arguments = new ArrayList<>();
+		for (Expr argument : expr.arguments) {
+			arguments.add(evaluate(argument));
+		}
+
+		// error to invoke a non-callable, e.g. "bandit"()
+		// throw error interpreter can handle rather than cast class exception that
+		// would cause JVM to die
+		if (!(callee instanceof LoxCallable)) {
+			throw new LoxRuntimeError(expr.paren,
+					"Can only call functions and classes.");
+		}
+
+		LoxCallable function = (LoxCallable) callee;
+		// design choice to make calling a function called with incorrect
+		// number of args an error rather than discarding or using `undefined`
+		if (arguments.size() != function.arity()) {
+			throw new LoxRuntimeError(expr.paren, "Expected " +
+					function.arity() + " arguments but got " +
+					arguments.size() + ".");
+		}
+		return function.call(this, arguments);
 	}
 
 	private void executeBlock(List<Stmt> statements, Environment environment) {
