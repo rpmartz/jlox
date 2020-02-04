@@ -307,6 +307,26 @@ parameters → IDENTIFIER ( "," IDENTIFIER )* ;
 
 * Function declarations are different from other literal nodes in that the declaration also binds the resulting object to a new variable
 
+## 10.5 Return Statements
+
+* In an expression oriented language like Ruby or Scheme, the body of a function is an expression whose value is implicitly the function's result
+* In Lox, we have a return _statement_ which is a `statement` in the grammar:
+
+```
+statement  → exprStmt
+           | forStmt
+           | ifStmt
+           | printStmt
+           | returnStmt
+           | whileStmt
+           | block ;
+
+returnStmt → "return" expression? ";" ;
+```
+
+* In Lox, every function returns something (under the hood) and so we return null which Lox treats as `nil`
+
+
 ## Questions
 
 * How does a multi-file interpeter work/parse the programs?
