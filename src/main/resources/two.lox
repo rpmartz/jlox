@@ -1,2 +1,19 @@
-var beverage = "expresso";
-print beverage;
+var counter = 0;
+while(counter < 9) {
+
+    if (counter < 4) {
+        print "first half";
+    }
+    else {
+        print "second half";
+    }
+
+    counter = counter + 1;
+
+}
+
+fun makeBanditWoof() {
+   print "Woof!";
+}
+
+makeBanditWoof();
