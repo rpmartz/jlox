@@ -12,7 +12,7 @@ public class LoxFunction implements LoxCallable {
 
 	@Override
 	public int arity() {
-		return 0;
+		return declaration.params.size();
 	}
 
 	@Override
@@ -27,5 +27,10 @@ public class LoxFunction implements LoxCallable {
 		interpreter.executeBlock(declaration.body, environment);
 
 		return null;
+	}
+
+	@Override
+	public String toString() {
+		return "<fn " + declaration.name.lexeme + ">";
 	}
 }
