@@ -24,6 +24,7 @@ import static com.ryanpmartz.lox.TokenType.NUMBER;
 import static com.ryanpmartz.lox.TokenType.OR;
 import static com.ryanpmartz.lox.TokenType.PLUS;
 import static com.ryanpmartz.lox.TokenType.PRINT;
+import static com.ryanpmartz.lox.TokenType.RETURN;
 import static com.ryanpmartz.lox.TokenType.RIGHT_BRACE;
 import static com.ryanpmartz.lox.TokenType.RIGHT_PAREN;
 import static com.ryanpmartz.lox.TokenType.SEMICOLON;
@@ -174,6 +175,10 @@ public class Parser {
 			return printStatement();
 		}
 
+		if (match(RETURN)) {
+			return returnStatement();
+		}
+
 		if (match(WHILE)) {
 			return whileStatement();
 		}
@@ -184,6 +189,20 @@ public class Parser {
 
 		return expressionStatement();
 	}
+
+	private Stmt returnStatement() {
+		Token keyword = previous();
+		Expr value = null;
+		if (!check(SEMICOLON)) {
+			value = expression();
+		}
+
+		consume(SEMICOLON, "Expect ';' after return value.");
+
+		// todo why return keyword here?
+		return new Stmt.Return(keyword, value);
+	}
+
 
 	private Stmt forStatement() {
 		consume(LEFT_PAREN, "Expect '(' after 'for'.");
