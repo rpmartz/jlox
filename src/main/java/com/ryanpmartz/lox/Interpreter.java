@@ -253,7 +253,8 @@ public class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
 
 	@Override
 	public Void visitFunctionStmt(Stmt.Function stmt) {
-		LoxFunction function = new LoxFunction(stmt);
+		// pass environment at time of declaration, rather than at call time
+		LoxFunction function = new LoxFunction(stmt, environment);
 		environment.define(stmt.name.lexeme, function);
 
 		return null;

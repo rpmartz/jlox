@@ -20,7 +20,7 @@ public class LoxFunction implements LoxCallable {
 	@Override
 	public Object call(Interpreter interpreter, List<Object> arguments) {
 		// create a new environment after each call not after each declaration (recursion)
-		Environment environment = new Environment(interpreter.globals);
+		Environment environment = new Environment(closure);
 		for (int i = 0; i < declaration.params.size(); i++) {
 			Token token = declaration.params.get(i);
 			environment.define(token.lexeme, arguments.get(i));
