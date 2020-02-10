@@ -59,6 +59,48 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 	}
 
 	@Override
+	public Void visitExpressionStmt(Stmt.Expression stmt) {
+		resolve(stmt.expression);
+		return null;
+	}
+
+	@Override
+	public Void visitIfStmt(Stmt.If stmt) {
+		resolve(stmt.condition);
+		resolve((stmt.thenBranch));
+
+		// condition is not evaluated in static analysis;
+		// all branches that _could_ be run are analyzed/evaluated
+		if (stmt.elseBranch != null) {
+			resolve(stmt.elseBranch);
+		}
+
+		return null;
+	}
+
+	@Override
+	public Void visitPrintStmt(Stmt.Print stmt) {
+		resolve(stmt.expression);
+		return null;
+	}
+
+	@Override
+	public Void visitReturnStmt(Stmt.Return stmt) {
+		if (stmt.value != null) {
+			resolve(stmt.value);
+		}
+
+		return null;
+	}
+
+	@Override
+	public Void visitWhileStmt(Stmt.While stmt) {
+		resolve(stmt.condition);
+		resolve(stmt.body);
+		return null;
+	}
+
+	@Override
 	public Void visitAssignExpr(Expr.Assign expr) {
 		resolve(expr.value);
 		resolveLocal(expr, expr.name);
