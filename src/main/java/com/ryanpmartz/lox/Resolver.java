@@ -65,6 +65,29 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 		return null;
 	}
 
+	@Override
+	public Void visitFunctionStmt(Stmt.Function stmt) {
+		declare(stmt.name);
+		/*
+		Eagerly define function's name so that it can refer to itself in its own body
+		(e.g. recursion)
+		 */
+		define(stmt.name);
+
+		resolveFunction(stmt);
+		return null;
+	}
+
+	private void resolveFunction(Stmt.Function function) {
+		beginScope();
+		for (Token param : function.params) {
+			declare(param);
+			define(param);
+		}
+		resolve(function.body);
+		endScope();
+	}
+
 	private void resolve(List<Stmt> statements) {
 		for (Stmt statement : statements) {
 			resolve(statement);
