@@ -326,6 +326,18 @@ returnStmt → "return" expression? ";" ;
 
 * In Lox, every function returns something (under the hood) and so we return null which Lox treats as `nil`
 
+# 11 Resolving and Binding
+
+* Rather than resolving a variable every time, we can add a pass to the interperter (after parsing and before interpreting) to cut down on the number of resolutions we do
+* there are more efficient ways to do so but we will make it a separate step for jlox for conceptual purposes and to avoid mangling the existing code
+
+#### 11.3.1
+
+* lexical scopes nest in the interpreter and the resolver - in the interpreter they're stored as a linked list of `Environment`s, but in the resolver we use a `Stack`
+* in Lox, we'll make it an error for a variable to reference itself in an initializer
+    + In order to do that, as we visit expressions, we need to know if we're in the initializer for a variable. We will do so by splitting binding into two steps, _declaration_ and _definition_
+    
+* functions both bind a name and introduce a scope
 
 ## Questions
 
