@@ -199,6 +199,13 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 		}
 
 		Map<String, Boolean> scope = scopes.peek();
+
+		// do not allow duplicate variables with same name to be declared within same scope
+		if (scope.containsKey(name.lexeme)) {
+			Lox.error(name,
+					"Variable with this name already declared in this scope.");
+		}
+
 		scope.put(name.lexeme, false); // false means is declared but not initialized
 	}
 
