@@ -2,7 +2,7 @@ package com.ryanpmartz.lox;
 
 import java.util.List;
 
-abstract class Expr {
+public abstract class Expr {
     interface Visitor<R> {
         R visitAssignExpr(Assign expr);
 
