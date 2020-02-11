@@ -86,7 +86,7 @@ public class AstGenerator {
 			String className, String fieldList) {
 
 
-		writer.println("  static class " + className + " extends " +
+		writer.println(" public static class " + className + " extends " +
 				baseName + " {");
 
 		// Constructor.
