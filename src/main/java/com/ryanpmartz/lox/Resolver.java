@@ -171,7 +171,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 		endScope();
 	}
 
-	private void resolve(List<Stmt> statements) {
+	public void resolve(List<Stmt> statements) {
 		for (Stmt statement : statements) {
 			resolve(statement);
 		}

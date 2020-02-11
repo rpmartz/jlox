@@ -61,6 +61,10 @@ public class Lox {
 			return;
 		}
 
+		// do not run resolver if parser has errors
+		Resolver resolver = new Resolver(interpreter);
+		resolver.resolve(statements);
+
 		interpreter.interpret(statements);
 	}
 
