@@ -339,6 +339,10 @@ returnStmt → "return" expression? ";" ;
     
 * functions both bind a name and introduce a scope
 
+## 11.4 Interpreting Resolved Variables
+
+* 2/10 0810 stopped here
+
 ## Questions
 
 * How does a multi-file interpeter work/parse the programs?

@@ -48,6 +48,10 @@ public class Environment {
 		throw new LoxRuntimeError(name, "Undefined variable '" + name.lexeme + "'. ");
 	}
 
+	public void assignAt(int distance, Token name, Object value) {
+		ancestor(distance).values.put(name.lexeme, value);
+	}
+
 	public Object getAt(int distance, String name) {
 		return ancestor(distance).values.get(name);
 	}
