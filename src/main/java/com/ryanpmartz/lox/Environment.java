@@ -48,4 +48,21 @@ public class Environment {
 		throw new LoxRuntimeError(name, "Undefined variable '" + name.lexeme + "'. ");
 	}
 
+	public Object getAt(int distance, String name) {
+		return ancestor(distance).values.get(name);
+	}
+
+	public Environment ancestor(int distance) {
+		// here we are assuming the Resolver did its job and can
+		// hop directly to the enclosing environment,
+		// but this is a tight logical coupling - could use asserts
+		Environment environment = this;
+		for (int i = 0; i < distance; i++) {
+			environment = environment.enclosing;
+		}
+
+		return environment;
+	}
+
+
 }
