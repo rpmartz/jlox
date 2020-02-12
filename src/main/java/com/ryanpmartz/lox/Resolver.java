@@ -9,6 +9,7 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
 	private final Interpreter interpreter;
 	private final Stack<Map<String, Boolean>> scopes = new Stack<>();
+	private FunctionType currentFunction = FunctionType.NONE;
 
 	public Resolver(Interpreter interpreter) {
 		this.interpreter = interpreter;
@@ -86,6 +87,11 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 
 	@Override
 	public Void visitReturnStmt(Stmt.Return stmt) {
+		// cannot return from outside a function
+		if (currentFunction == FunctionType.NONE) {
+			Lox.error(stmt.keyword, "Cannot return from top-level code.");
+		}
+
 		if (stmt.value != null) {
 			resolve(stmt.value);
 		}
@@ -157,11 +163,15 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 		 */
 		define(stmt.name);
 
-		resolveFunction(stmt);
+		resolveFunction(stmt, FunctionType.FUNCTION);
 		return null;
 	}
 
-	private void resolveFunction(Stmt.Function function) {
+	private void resolveFunction(Stmt.Function function, FunctionType type) {
+		// in Lox, functions can be nested arbitrarily deeply
+		FunctionType enclosingFunction = currentFunction;
+		currentFunction = type;
+
 		beginScope();
 		for (Token param : function.params) {
 			declare(param);
@@ -169,6 +179,8 @@ public class Resolver implements Expr.Visitor<Void>, Stmt.Visitor<Void> {
 		}
 		resolve(function.body);
 		endScope();
+
+		currentFunction = enclosingFunction;
 	}
 
 	public void resolve(List<Stmt> statements) {

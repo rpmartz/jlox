@@ -341,7 +341,11 @@ returnStmt → "return" expression? ";" ;
 
 ## 11.4 Interpreting Resolved Variables
 
-* 2/10 0810 stopped here
+* TODO: go back and understand what this is doing
+
+## 11.5
+__
+* we can extend the resolver to detect valid statements in illegal places, e.g. `return "hi";` outside of a function
 
 ## Questions
 
