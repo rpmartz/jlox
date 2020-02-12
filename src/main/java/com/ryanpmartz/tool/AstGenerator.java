@@ -110,7 +110,7 @@ public class AstGenerator {
 		// Fields.
 		writer.println();
 		for (String field : fields) {
-			writer.println("    final " + field + ";");
+			writer.println(" public final " + field + ";");
 		}
 
 		writer.println("  }");

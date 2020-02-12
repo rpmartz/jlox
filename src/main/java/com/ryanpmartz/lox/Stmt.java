@@ -30,7 +30,7 @@ public abstract class Stmt {
             return visitor.visitBlockStmt(this);
         }
 
-        final List<Stmt> statements;
+        public final List<Stmt> statements;
     }
 
     public static class Expression extends Stmt {
@@ -42,7 +42,7 @@ public abstract class Stmt {
             return visitor.visitExpressionStmt(this);
         }
 
-        final Expr expression;
+        public final Expr expression;
     }
 
     public static class Function extends Stmt {
@@ -56,9 +56,9 @@ public abstract class Stmt {
             return visitor.visitFunctionStmt(this);
         }
 
-        final Token name;
-        final List<Token> params;
-        final List<Stmt> body;
+        public final Token name;
+        public final List<Token> params;
+        public final List<Stmt> body;
     }
 
     public static class If extends Stmt {
@@ -72,9 +72,9 @@ public abstract class Stmt {
             return visitor.visitIfStmt(this);
         }
 
-        final Expr condition;
-        final Stmt thenBranch;
-        final Stmt elseBranch;
+        public final Expr condition;
+        public final Stmt thenBranch;
+        public final Stmt elseBranch;
     }
 
     public static class Print extends Stmt {
@@ -86,7 +86,7 @@ public abstract class Stmt {
             return visitor.visitPrintStmt(this);
         }
 
-        final Expr expression;
+        public final Expr expression;
     }
 
     public static class Return extends Stmt {
@@ -99,8 +99,8 @@ public abstract class Stmt {
             return visitor.visitReturnStmt(this);
         }
 
-        final Token keyword;
-        final Expr value;
+        public final Token keyword;
+        public final Expr value;
     }
 
     public static class Var extends Stmt {
@@ -113,8 +113,8 @@ public abstract class Stmt {
             return visitor.visitVarStmt(this);
         }
 
-        final Token name;
-        final Expr initializer;
+        public final Token name;
+        public final Expr initializer;
     }
 
     public static class While extends Stmt {
@@ -127,8 +127,8 @@ public abstract class Stmt {
             return visitor.visitWhileStmt(this);
         }
 
-        final Expr condition;
-        final Stmt body;
+        public final Expr condition;
+        public final Stmt body;
     }
 
     abstract <R> R accept(Visitor<R> visitor);
